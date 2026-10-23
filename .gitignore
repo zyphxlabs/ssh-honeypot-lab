@@ -1,0 +1,6 @@
+data/
+*.pem
+*.key
+.env
+downloads/
+tty/
