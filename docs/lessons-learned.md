@@ -84,3 +84,27 @@ First the attacker did T1110 to get the password. Then they used T1078 to use th
 ### In my honeypot
 
 The attacker will type the commands and they will be stored in `cowrie.json`. If they run or download malware its copy will be saved in Cowrie's downloads folder. That's why I kept `downloads/` in the `.gitignore` file so I don't accidentally publish the malware and it doesn't harm somebody's system.
+
+---
+
+## T1105 Ingress Tool Transfer
+
+T1105 is Ingress Tool Transfer. Ingress means coming in and the opposite of it is "egress" (going out). T1105 has no sub-techniques.
+
+The attacker uses this to get a specialized tool like a crypto miner onto the victim machine. They can do it by the wget command or curl or they may use a server that they are controlling and download the malware from there onto the victim machine.
+
+### Tactic
+
+**Command and Control:** The C2 means the attacker commands and controls the victim system. Basically it is the line of contact to the attacker through which they keep the system under their control and use the machine to send the commands and bring files.
+
+### Difference from T1059.004
+
+It is different from T1059.004 as T1059.004 does the execution of commands and T1105 gets the files from outside.
+
+### How it fits the chain
+
+Till now T1110 gets the password. T1078 logs in with that password. T1059.004 types commands and now T1105 downloads the tools using those commands.
+
+### In my honeypot
+
+When an attacker runs wget or curl inside a Cowrie honeypot to bring their things onto the system by downloading, the downloaded file is caught and saved inside the `downloads` folder. The commands they typed to get that file are recorded in `cowrie.json`.
