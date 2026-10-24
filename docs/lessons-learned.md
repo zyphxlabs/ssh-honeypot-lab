@@ -113,27 +113,27 @@ When an attacker runs wget or curl inside a Cowrie honeypot to bring their thing
 
 ## SSH Account Manipulation and Persistence (T1098.004)
 
-### 1. Technique and sub-technique
+### Technique and sub-technique
 
 The number for this technique is T1098 and its name is Account Manipulation. In this the attacker modifies a compromised account's settings to keep access or get higher access and those changes can be to the credentials (password or keys) or to the permissions (groups). The sub-technique for this in my project is T1098.004 which is named SSH Authorized Keys.
 
-### 2. Where the key goes
+### Where the key goes
 
 So the attacker adds their public key to the `authorized_keys` of the SSH. This is the file that keeps the keys that are authorized to get in. Every user has their own file inside their home folder and the full path is `~/.ssh/authorized_keys`. It keeps one public key per line.
 
-### 3. Public and private key
+### Public and private key
 
 Public key and private key are a concept of asymmetric cryptography where there are 2 keys. One is private and the other is public. Let's suppose the public key is like a lock that anyone can see and copy and the private key is the only key that opens that lock. The server keeps the public key lock. So when logging in, the attacker proves he has the matching private key and the private key itself never goes to the server.
 
-### 4. Why it is dangerous
+### Why it is dangerous
 
 By using this pair the attacker can get into the system without a password too. This is why it is dangerous as a password reset won't help or stop the attacker. The password reset only changes the password, but the key login does not use the password at all so the attacker's key keeps working anyway.
 
-### 5. Tactics
+### Tactics
 
 The tactics are persistence and privilege escalation. Persistence is when the attacker can get back as they wish. Privilege escalation is when the attacker can give themselves higher permission for example a root login. If they put their key into root's `.ssh` folder at `/root/.ssh/authorized_keys`, they can log in straight as root.
 
-### 6. sshd_config
+### sshd_config
 
 There is also a file called `sshd_config` which is the settings file of the SSH server, and it lives at `/etc/ssh/sshd_config`. It does not keep keys, but the attacker might change two settings inside it:
 
@@ -142,14 +142,42 @@ There is also a file called `sshd_config` which is the settings file of the SSH 
 
 The attacker changes them so his key works and he can get root access.
 
-### 7. Mitigation
+### Mitigation
 
 Mitigation is to disable the SSH if the system doesn't need any SSH connection.
 
-### 8. Detection
+### Detection
 
 To detect this watch for processes that modify the `authorized_keys` file or the `/etc/ssh/sshd_config` file.
 
-### 9. In my honeypot
+### In my honeypot
 
 It could show up in my honeypot as the attacker can try to add his key to the SSH so he can get back as he wants. The attacker might type commands like `mkdir -p ~/.ssh` to make the folder, and then `echo "ssh-rsa AAAA... attacker" >> ~/.ssh/authorized_keys` to append his key, and maybe use `chmod` on it. Everything he types will be logged in the `cowrie.json` file and we can find it by searching the log for the word `authorized_keys`.
+
+---
+
+## Cron Scheduled Task (T1053.003)
+
+### Technique and sub-technique
+
+The parent technique T1053 is called Scheduled Task/Job in which the attacker uses the system's scheduling feature to make commands or programs run automatically without having to start them manually every time. The sub-technique for this in my project is T1053.003 which is named Cron.
+
+Cron is the time-based job scheduler of Linux it is used to run commands at a particular time or repeatedly as desired inshort a crontab is the file that keeps the scheduled jobs for a user.
+
+### Tactics (the attacker's goals)
+
+- **Execution:** getting his program or malicious code to run.
+- **Persistence:** it keeps running on a scheduled basis or after a reboot so he keeps access.
+- **Privilege Escalation:** the attacker gets more power. If the job is made in root's crontab it runs as root so it gives him more power.
+
+### Mitigation
+
+Cron permissions are controlled by the `/etc/cron.allow` and `/etc/cron.deny` files. The `cron.deny` file lists specific users who are not allowed to use cron. If neither file exists, only the superuser can use cron.
+
+### Detection
+
+To detect this you have to watch for processes that create or modify cron jobs via `crontab` or the `/etc/cron.*` directories. Normal software installs and admin work also create them so you have to compare the changes with what is normal for your system. We can also review cron execution logs in the `/var/log` directory.
+
+### In my honeypot
+
+It could show up in my honeypot because after planting a key with T1098.004 an attacker may also plant a cron job so his program restarts or pulls down a crypto miner. When they run commands to edit or echo things into the crontab those commands are caught and stored in `cowrie.json`. We can find it by searching the log file for words like `crontab` or `cron`. The log only shows what Cowrie recorded during the session so it does not prove the cron job was installed or ran.
