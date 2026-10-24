@@ -108,3 +108,48 @@ Till now T1110 gets the password. T1078 logs in with that password. T1059.004 ty
 ### In my honeypot
 
 When an attacker runs wget or curl inside a Cowrie honeypot to bring their things onto the system by downloading, the downloaded file is caught and saved inside the `downloads` folder. The commands they typed to get that file are recorded in `cowrie.json`.
+
+---
+
+## SSH Account Manipulation and Persistence (T1098.004)
+
+### 1. Technique and sub-technique
+
+The number for this technique is T1098 and its name is Account Manipulation. In this the attacker modifies a compromised account's settings to keep access or get higher access and those changes can be to the credentials (password or keys) or to the permissions (groups). The sub-technique for this in my project is T1098.004 which is named SSH Authorized Keys.
+
+### 2. Where the key goes
+
+So the attacker adds their public key to the `authorized_keys` of the SSH. This is the file that keeps the keys that are authorized to get in. Every user has their own file inside their home folder and the full path is `~/.ssh/authorized_keys`. It keeps one public key per line.
+
+### 3. Public and private key
+
+Public key and private key are a concept of asymmetric cryptography where there are 2 keys. One is private and the other is public. Let's suppose the public key is like a lock that anyone can see and copy and the private key is the only key that opens that lock. The server keeps the public key lock. So when logging in, the attacker proves he has the matching private key and the private key itself never goes to the server.
+
+### 4. Why it is dangerous
+
+By using this pair the attacker can get into the system without a password too. This is why it is dangerous as a password reset won't help or stop the attacker. The password reset only changes the password, but the key login does not use the password at all so the attacker's key keeps working anyway.
+
+### 5. Tactics
+
+The tactics are persistence and privilege escalation. Persistence is when the attacker can get back as they wish. Privilege escalation is when the attacker can give themselves higher permission for example a root login. If they put their key into root's `.ssh` folder at `/root/.ssh/authorized_keys`, they can log in straight as root.
+
+### 6. sshd_config
+
+There is also a file called `sshd_config` which is the settings file of the SSH server, and it lives at `/etc/ssh/sshd_config`. It does not keep keys, but the attacker might change two settings inside it:
+
+- `PubkeyAuthentication yes` to allow login with keys.
+- `PermitRootLogin yes` to allow root to log in over SSH.
+
+The attacker changes them so his key works and he can get root access.
+
+### 7. Mitigation
+
+Mitigation is to disable the SSH if the system doesn't need any SSH connection.
+
+### 8. Detection
+
+To detect this watch for processes that modify the `authorized_keys` file or the `/etc/ssh/sshd_config` file.
+
+### 9. In my honeypot
+
+It could show up in my honeypot as the attacker can try to add his key to the SSH so he can get back as he wants. The attacker might type commands like `mkdir -p ~/.ssh` to make the folder, and then `echo "ssh-rsa AAAA... attacker" >> ~/.ssh/authorized_keys` to append his key, and maybe use `chmod` on it. Everything he types will be logged in the `cowrie.json` file and we can find it by searching the log for the word `authorized_keys`.
