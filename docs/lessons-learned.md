@@ -59,3 +59,28 @@ The MITRE ATT&CK gave this the T1078 number and its name is Valid Accounts. In t
 
 Now if i try to differentiate it from Brute force the brute force is trying 500 keys one by one to open the door.
 In short brute force is like getting the keys and valid account is like using that key.
+
+---
+
+## T1059.004 Unix Shell
+
+The parent technique T1059 is called Command and Scripting Interpreter. The command is the instruction to execute the thing and scripting is writing commands or instructions in sequence so they run one after another. An interpreter is the one that takes the command and does the work.
+
+The .004 is the Unix shell. Systems like Linux and macOS are called Unix systems. The shell is the interactive command line where we type commands. It has the same idea as the GUI but it works by typing plain text commands.
+
+### Tactic
+
+**Execution:** It is the goal of the attacker. He writes and runs commands on the victim machine to make the system do things. The shell is the place where he types those commands.
+
+### How attackers use it
+
+- **Reverse shell:** The victim machine connects out to the attacker and that outgoing connection gives the attacker his shell. So this often gets past the firewalls as they block connections coming in but allow connections going out.
+- **Running malware scripts:** They run the script. For example there could be a script to create a crontab desired by the attacker or download the crypto miner malware that will be used to mine crypto for the attacker on the victim's system.
+
+### How it fits the chain
+
+First the attacker did T1110 to get the password. Then they used T1078 to use that password and get into the system. Now it is T1059.004 running commands on the machine.
+
+### In my honeypot
+
+The attacker will type the commands and they will be stored in `cowrie.json`. If they run or download malware its copy will be saved in Cowrie's downloads folder. That's why I kept `downloads/` in the `.gitignore` file so I don't accidentally publish the malware and it doesn't harm somebody's system.
