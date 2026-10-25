@@ -1,3 +1,5 @@
+# Study Notes
+
 # I. Cowrie
 
 Cowrie is a fake computer that gives fake SSH and Telnet access to an attacker. It has three modes.
@@ -184,13 +186,13 @@ It could show up in my honeypot because after planting a key with T1098.004 an a
 
 ---
 
-# T1496 Resource Hijacking
+## T1496 Resource Hijacking
 
-## Technique
+### Technique
 
 The ID given by MITRE ATT&CK for this is T1496. Hijacking means using the victim's system to get work done for the attacker's own benefit. The victim pays the cost and the attacker enjoys the profit. For example a crypto miner on the victim's system. It impacts the system performance and availability. The system may stop working if the load of the work is too much and it won't even do basic tasks for the victim's daily routine.
 
-## Sub-techniques
+### Sub-techniques
 
 It has 4 sub-techniques.
 
@@ -199,18 +201,18 @@ It has 4 sub-techniques.
 - **T1496.003 (SMS Pumping):** The attacker abuses the SMS forms that send codes. They may send multiple messages and the victim's bill will go high as a result.
 - **T1496.004 (Cloud Service Hijacking):** Examples are email and SMS and AI models. The attacker uses them for their own benefit like using an AI model for free and the victim will be charged for this.
 
-## Tactic
+### Tactic
 
 Tactic means the attacker's goal. In this case it is Impact. The attacker harms or disrupts the system. This is usually a late step as the attacker first gets in and then gets the profit.
 
-## Mitigation
+### Mitigation
 
 Mitigation for this is hard compared to other techniques.
 
-## Detection
+### Detection
 
 Checking CPU and GPU use. If they are high for a long time even with no task going on then it may be compromised by it. Looking for connections to a mining pool. We can also detect by noticing unusual containers or cloud instances.
 
-## Honeypot
+### Honeypot
 
 In my honeypot the attacker can't really do this even if they try. They can see that things are working and that they succeeded but in reality this is a Cowrie honeypot so their actions will be captured in `cowrie.json` and their whole working process can be found there.
