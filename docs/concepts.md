@@ -33,3 +33,9 @@ IOC is an indicator of compromise. It means a sign that a system was attacked or
 There are 4 common types. The first is the IP where the attack came from. The second is the domain the attacker used to host the malware. The third is the file hash. Every file has a unique hash that is very hard to fake. Two files that are the same except for a single dot still have different hashes. The fourth is the URL which is the whole web address they typed with wget to get the malware.
 
 In the modern era the domain and IP can be changed but if the malware is the same the file hash stays the same.
+
+---
+
+## ATT&CK Tactic vs Technique
+
+The tactic is the attacker's goal. For example getting the password to log in to the system. The technique is the method he uses to reach that goal. For example he may use a brute force attack to try different passwords until he finds the correct one.
