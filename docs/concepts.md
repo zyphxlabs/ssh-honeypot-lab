@@ -39,3 +39,11 @@ In the modern era the domain and IP can be changed but if the malware is the sam
 ## ATT&CK Tactic vs Technique
 
 The tactic is the attacker's goal. For example getting the password to log in to the system. The technique is the method he uses to reach that goal. For example he may use a brute force attack to try different passwords until he finds the correct one.
+
+---
+
+## Detection Engineering
+
+Detection engineering is building the rules to know and catch unusual activity. Telemetry is the data that is produced by the activity of a system. Logs are telemetry. The project uses Cowrie so `cowrie.json` is the telemetry.
+
+For example the telemetry shows 50 login attempts in under 4 minutes. A detection rule reads that telemetry and flags it as a possible brute force. The rule is the detection and the 50 attempts that were logged are the telemetry.
