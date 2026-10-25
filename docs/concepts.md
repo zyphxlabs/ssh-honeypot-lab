@@ -23,3 +23,13 @@ A botnet is a network of hijacked computers controlled by an attacker through co
 The Mirai source code was leaked and later used by many to make copy botnets. Mozi was peer to peer with no single C2 so every bot works as an equal peer. Mirai spreads through weak Telnet passwords and Mozi through weak Telnet passwords and common vulnerabilities.
 
 Then come cryptominer botnets. They mine crypto and it is the T1496.001 Compute Hijacking part.
+
+---
+
+## IOC
+
+IOC is an indicator of compromise. It means a sign that a system was attacked or compromised.
+
+There are 4 common types. The first is the IP where the attack came from. The second is the domain the attacker used to host the malware. The third is the file hash. Every file has a unique hash that is very hard to fake. Two files that are the same except for a single dot still have different hashes. The fourth is the URL which is the whole web address they typed with wget to get the malware.
+
+In the modern era the domain and IP can be changed but if the malware is the same the file hash stays the same.
