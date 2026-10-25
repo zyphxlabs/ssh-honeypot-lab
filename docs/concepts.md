@@ -47,3 +47,11 @@ The tactic is the attacker's goal. For example getting the password to log in to
 Detection engineering is building the rules to know and catch unusual activity. Telemetry is the data that is produced by the activity of a system. Logs are telemetry. The project uses Cowrie so `cowrie.json` is the telemetry.
 
 For example the telemetry shows 50 login attempts in under 4 minutes. A detection rule reads that telemetry and flags it as a possible brute force. The rule is the detection and the 50 attempts that were logged are the telemetry.
+
+---
+
+## Threat Model
+
+A threat model is like future planning. It asks what if this breaks and what if that goes wrong, so what should I do if something goes out of control. It means planning the possible scenarios and then the steps to mitigate them.
+
+For example my lab is offline and has no internet. But what if it was online. An attacker may escape the honeypot and enter my network and hack my real system.
