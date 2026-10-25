@@ -13,3 +13,13 @@ Next come 3 types. The first is low where we give only fake services. The second
 Brute force means guessing a password by trying one after another on a system or service.
 
 Credential stuffing means using username and password pairs from data breaches and trying them on another system. People may reuse the same password everywhere so someone with QWERTY123 on Instagram probably has it on Gmail and Facebook too.
+
+---
+
+## Botnet and Mirai
+
+A botnet is a network of hijacked computers controlled by an attacker through command and control (C2). It is used in DDoS attacks. The most common examples are the Mirai and Mozi botnets where IoT devices like cameras and routers are hacked and added to the botnet.
+
+The Mirai source code was leaked and later used by many to make copy botnets. Mozi was peer to peer with no single C2 so every bot works as an equal peer. Mirai spreads through weak Telnet passwords and Mozi through weak Telnet passwords and common vulnerabilities.
+
+Then come cryptominer botnets. They mine crypto and it is the T1496.001 Compute Hijacking part.
