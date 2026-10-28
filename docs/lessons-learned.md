@@ -1,1 +1,27 @@
 # Lessons Learned
+
+## Failure 1: Cowrie would not start from the wrong folder
+
+### What I ran
+
+I turned on the vm and logged in as my main user zyphex(me) which have sudo privileges. Then I switched with sudo -su cowrie and ran source ~/my-honeypot/cowrie-env/bin/activate and the prompt changed. Then I ran cowrie start from /home/zyphex.
+
+### Error
+
+PermissionError: (Errno 13) Permission denied: 'etc/cowrie.cfg'
+
+### Why it failed
+
+I never did cd ~/my-honeypot and I was in the wrong directory. sudo -su cowrie opens a cowrie shell but it keeps me in the folder I was in. The folder was /home/zyphex. Its permissions are drwx------. The d means it is a directory. The owner zyphex has read, write and execute. The group and others have no permission. A dash means that permission is off. The cowrie user is not the owner and not in the group so it counts as others. On a folder x means permission to enter it. Without x cowrie cannot even look inside. That is why it showed Permission denied. Cowrie needs the etc and var folders to run. The etc folder has all the configuration and settings of cowrie like the /etc on a normal system. The var folder has the logs.
+
+The error names etc/cowrie.cfg because the cowrie settings live there. The path is short with no full path in front. So Cowrie looks for it inside the folder I am standing in. It only works from ~/my-honeypot because cowrie init made etc and var there.
+
+### Fix
+
+cd ~/my-honeypot
+
+sudo su - cowrie changes me to /home/cowrie. sudo -su cowrie does not. It just opens the prompt in /home/zyphex.
+
+The path source ~/my-honeypot/cowrie-env/bin/activate works from any folder. A short path like source cowrie-env/bin/activate only works if I am already inside my-honeypot.
+
+Cowrie started because I switched to the right folder that has the cowrie things in it. I typed cowrie start command whichstarted it and cowrie status command printed cowrie is running (pid:1016). cowrie stop said stopping cowrie.... and then status said cowrie is not running.
