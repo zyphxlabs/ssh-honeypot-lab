@@ -129,4 +129,4 @@ I was cleaning my test logs so I typed `rm` with the path to `cowrie.json*`, the
 
 ### Lesson
 
-`&&` needs a command on both sides and a file name alone is not a commandnand because `*` can match more files than I expect I check a wildcard command before I press Enter.
+`&&` needs a command on both sides and a file name alone is not a command and because `*` can match more files than I expect I check a wildcard command before I press Enter.
