@@ -80,3 +80,25 @@ The error chain was:
 ### Fix
 
 I restored the backup with `cp` and ran `cowrie start` again. It worked. `grep -c` showed 0 bad lines left.
+
+---
+
+---
+
+## Incident 1: I typed my real password at the Cowrie prompt
+
+### What I ran
+
+I logged in as `zyphex` and switched to the `cowrie` user. I initialized Cowrie and ran it on port 2222. Then I tested it with SSH to port 2222.
+
+### What went wrong
+
+When it asked me to type the password, I entered the real password of my `zyphex` account, the one that is in the sudoers file. After a minute I realized that I made a mistake. I stopped Cowrie and went to check the files. I found my password in `cowrie.json`.
+
+### Fix
+
+I cleaned all the files to clear the record. I also checked my password and it is fine.
+
+### Lesson
+
+Cowrie logs every password it sees. I never write my password or a hint of it in the repo.
