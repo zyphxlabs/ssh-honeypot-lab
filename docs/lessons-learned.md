@@ -58,7 +58,7 @@ The first `source` command failed with `No such file or directory`. I typed the 
 
 ### What I ran
 
-I went to `/home/cowrie/my-honeypot` and made a backup of `etc/cowrie.cfg` with the `cp` command, so I could restore it if anything went wrong. I confirmed the backup with `ls -l`. Then I added a bad line at the end of the file with `echo` and `>>`. The line was `"broken by zyphex"`. I checked the last 3 lines with `tail` to confirm that it really changed. Then I ran `cowrie start` and saved the output to `out.txt`.
+I went to `/home/cowrie/my-honeypot` and made a backup of `etc/cowrie.cfg` with the `cp` command, so I could restore it if anything went wrong. I confirmed the backup with `ls -l`. Then I added a bad line at the end of the file with `echo` and `>>`. The line was `broken by zyphex`. I checked the last 3 lines with `tail` to confirm that it really changed. Then I ran `cowrie start` and saved the output to `out.txt`.
 
 ### Error
 
