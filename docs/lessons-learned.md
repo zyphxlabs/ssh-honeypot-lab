@@ -102,3 +102,31 @@ I cleaned all the files to clear the record. I also checked my password and it i
 ### Lesson
 
 Cowrie logs every password it sees. I never write my password or a hint of it in the repo.
+
+---
+
+---
+
+---
+
+## Incident 2: `rm` with `&&` and a missing command
+
+### What I ran
+
+I was cleaning my test logs so I typed `rm` with the path to `cowrie.json*`, then `&&`, then the path to `cowrie.log*` without another `rm` in front of it because I thought `rm` would carry over to the second part and I put the `*` at the end of both names so that any other files I might have missed would be cleared too.
+
+### Error
+
+`Permission denied`
+
+### Why it failed
+
+`&&` joins two full commands so the second part needs its own command name and mine was only a file path which made bash treat the first file that `cowrie.log*` matched as a program to run and since a log file is not executable it said `Permission denied`.
+
+### Fix
+
+`rm` takes both paths in one command with a space between them, like `rm cowrie.json* cowrie.log*`, and I use `&&` only when both sides are full commands.
+
+### Lesson
+
+`&&` needs a command on both sides and a file name alone is not a commandnand because `*` can match more files than I expect I check a wildcard command before I press Enter.
