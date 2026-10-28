@@ -25,3 +25,27 @@ sudo su - cowrie changes me to /home/cowrie. sudo -su cowrie does not. It just o
 The path source ~/my-honeypot/cowrie-env/bin/activate works from any folder. A short path like source cowrie-env/bin/activate only works if I am already inside my-honeypot.
 
 Cowrie started because I switched to the right folder that has the cowrie things in it. I typed cowrie start command whichstarted it and cowrie status command printed cowrie is running (pid:1016). cowrie stop said stopping cowrie.... and then status said cowrie is not running.
+
+---
+
+## Failure 2: Cowrie would not start as root
+
+### What I ran
+
+I opened a root shell with sudo -i. I activated the venv with the full path /home/cowrie/my-honeypot/cowrie-env/bin/activate and went to /home/cowrie/my-honeypot. Then I ran cowrie start.
+
+### Error
+
+ERROR: You must not run cowrie as root!
+
+### Why it failed
+
+Cowrie checks which user is running it. If the user is root it stops on purpose. If an attacker breaks out of the fake shell, he gets the rights of the user running Cowrie. If that is root, he is the owner of everything in the VM and can do whatever he wants. That is the worst nightmare for a SOC team.
+
+### Fix
+
+I run Cowrie only as the cowrie user.
+
+### Side problem I hit on the way
+
+The first source command failed with No such file or directory. I typed the wrong venv folder name. It is cowrie-env and I left out -env. Then I put ~/ in front of a full path and bash looked in /root/home/... A full path starts with / and needs no ~ in front. ~ means the home of whoever I am right now. As root that is /root, not /home/cowrie.
