@@ -26,7 +26,7 @@ The error names `etc/cowrie.cfg` because the cowrie settings live there. The pat
 
 The path `source ~/my-honeypot/cowrie-env/bin/activate` works from any folder. A short path like `source cowrie-env/bin/activate` only works if I am already inside `my-honeypot`.
 
-Cowrie started because I switched to the right folder that has the cowrie things in it. I typed `cowrie start` command whichstarted it and `cowrie status` command printed `cowrie is running (pid:1016)`. `cowrie stop` said `stopping cowrie....` and then status said `cowrie is  not running`.
+Cowrie started because I switched to the right folder that has the cowrie things in it. I typed `cowrie start` command which started it and `cowrie status` command printed `cowrie is running (pid:1016)`. `cowrie stop` said `stopping cowrie....` and then status said `cowrie is not running`.
 
 ---
 
