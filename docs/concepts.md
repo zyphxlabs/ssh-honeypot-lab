@@ -63,3 +63,7 @@ Cowrie has 2 kinds of records. One is `cowrie.log` which contains the start and 
 ## NAT, Host-only and Bridged
 
 We have 3 network modes. The first is NAT, which I used during the early setup. In NAT the VM takes its internet connection through the host, and nothing from outside can reach the VM. I cut this off and now I am on host-only. In host-only the host can reach the VM, and the VM can reach the host and other VMs, but there is no internet. The last is bridged, which I never use, because the VM would become a separate device on my real network and could reach the internet via the router. In my lab this is forbidden because the honeypot would then be reachable from my home network.
+
+## jq and cowrie.json
+
+cowrie.json holds the logs of the attacker activity in JSON Lines format and I think of it as a pile of cards where every line is one card. jq is the tool that picks one field from every card. It works a bit like grep but grep gives me the whole line and jq gives me only the part I ask for. I write jq then a dot and the field name and then the file name for example `jq .eventid cowrie.json`. If I want the names in order with a count I add `| sort | uniq -c` after the first command. The pipe takes the output of one command and hands it to the next one for processing. jq reads only cowrie.json because cowrie.log is plain text and gives a parse error. I made 3 login attempts from the VM itself and 2 of them got in. The one that failed was root with the password 123456 and cowrie.login.failed counted it once.
