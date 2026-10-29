@@ -59,3 +59,7 @@ For example my lab is offline and has no internet. But what if it was online. An
 ## cowrie.log vs cowrie.json
 
 Cowrie has 2 kinds of records. One is `cowrie.log` which contains the start and stop messages and the errors of Cowrie itself and the other is `cowrie.json` which shows the activity of the attacker connected to the honeypot in JSON format. The json file is written as JSON Lines so every event sits on its own line and a script can read it one line at a time. I will analyze `cowrie.json` because it holds the attacker events like logins and commands with a session ID on every event and my `sessionize.py` groups those events into sessions. The `cowrie.log` file is better for checking if Cowrie runs well or why it failed to start.
+
+## NAT, Host-only and Bridged
+
+We have 3 network modes. The first is NAT, which I used during the early setup. In NAT the VM takes its internet connection through the host, and nothing from outside can reach the VM. I cut this off and now I am on host-only. In host-only the host can reach the VM, and the VM can reach the host and other VMs, but there is no internet. The last is bridged, which I never use, because the VM would become a separate device on my real network and could reach the internet via the router. In my lab this is forbidden because the honeypot would then be reachable from my home network.
