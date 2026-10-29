@@ -21,6 +21,10 @@ Cowrie is a fake computer that gives fake SSH and Telnet access to an attacker. 
 - `cowrie.log` is Cowrie's own log it holds things like start stop and errors.
 - `cowrie.json` is the log of the attacker's attempts.
 
+### Who can log in
+
+So now it was time to check who can get in to the system so I checked which users Cowrie allows to get in. The file `userdb.txt` is not present in my `etc/` folder and `cowrie.cfg` only says `auth_class = UserDB`, so Cowrie uses the built-in `userdb.example` from the Cowrie package, which it takes when there is no `userdb.txt` made by me. I found this by reading the Cowrie code in `auth.py`. The list has 3 deny rules for root and the line `*:x:*`, which means every user with every password can log in, so root is only blocked with those 3 passwords. Cowrie goes down the list in file order and the first line that matches decides, so the deny lines must come before the allow lines. This means almost every login succeeds on my honeypot, and it will matter in Phase 4 because a brute force scenario can only fail for the few denied pairs.
+
 ---
 
 # II. MITRE ATT&CK
