@@ -67,3 +67,7 @@ We have 3 network modes. The first is NAT, which I used during the early setup. 
 ## jq and cowrie.json
 
 cowrie.json holds the logs of the attacker activity in JSON Lines format and I think of it as a pile of cards where every line is one card. jq is the tool that picks one field from every card. It works a bit like grep but grep gives me the whole line and jq gives me only the part I ask for. I write jq then a dot and the field name and then the file name for example `jq .eventid cowrie.json`. If I want the names in order with a count I add `| sort | uniq -c` after the first command. The pipe takes the output of one command and hands it to the next one for processing. jq reads only cowrie.json because cowrie.log is plain text and gives a parse error. I made 3 login attempts from the VM itself and 2 of them got in. The one that failed was root with the password 123456 and cowrie.login.failed counted it once.
+
+## Cowrie event types
+
+`cowrie.session.connect` tells me a connection was made to port 2222 via ssh. `cowrie.client.version` tells me the SSH version the client announced and mine was OpenSSH_9.2p1 Debian. `cowrie.client.kex` is the key exchange at the start of the connection and it holds the hassh fingerprint of the client. `cowrie.login.success` and `cowrie.login.failed` tell me which login was accepted and which one was rejected. `cowrie.command.input` tells me a command was entered and mine were 5. `cowrie.session.closed` tells me the session ended and it holds the duration in `duration_ms`.
