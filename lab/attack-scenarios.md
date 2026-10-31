@@ -195,3 +195,25 @@ This is the part that matters for this scenario. Cowrie logged only `1` command 
 The close time in true UTC is calculated as `2026-10-31T11:44:19Z` and it is not noted. The end time I noted on Kali is about `15 seconds` after the session really closed. I can only say this session looks fast in the log. It does not prove that a real bot was behind it because I ran it myself and I typed the password by hand.
 
 For the `MITRE ATT&CK` part I am not putting a number here either because I am not going to make one up for a fast bot session. What this scenario shows is speed and not what an attacker does so I only call it behavioral for now (`Label: SIMULATED.`)
+
+---
+
+## Scenario 11: different SSH clients
+
+This one is not about what the attacker does. It is about the tool the attacker connects with. Every SSH client says hello in its own way when it connects and Cowrie turns that hello into a fingerprint called `HASSH` so the same tool should always give the same value. All my scenarios so far used the normal ssh program from my attacker VM Kali so I wanted a second client and one log where I can put the two side by side. The second client is `paramiko` which is a Python SSH library and honestly it was already sitting on my Kali in version `4.0.0` so I installed nothing. I wrote a tiny script for it and it asks for the password when it runs so I type it by hand and no password is in the file. The script stays on Kali and never goes in the repo.
+
+I checked first that Cowrie was running and that my attacker VM Kali had only the host-only address. Then I noted the start time and it was `2026-10-31T12:00:31Z` in true UTC. The Cowrie log time for the start is `2026-10-31T17:00:31` with the same `5 hour shift` as before because of the timezone of my Debian VM. I ran the same command with both clients and the command is just `whoami`. First the normal ssh client and then the script.
+
+Command: `ssh <lab-account>@<vm-ip> -p 2222 'whoami'`
+
+Command: `python3 paramiko_test.py`
+
+The normal ssh client printed the name of my lab account like always. The script did not. It logged in fine and then crashed with `Channel closed` on the line that runs the command. I do not know why. My guess is that Cowrie answers the two clients in a different way but I did not check it. Then I noted the end time and it was `2026-10-31T12:02:21Z` in true UTC. The Cowrie log window is `2026-10-31T17:00:31 to 2026-10-31T17:02:21`.
+
+Then I jumped to my Debian VM and counted the sessions after my start time and there were `2` just like I expected. I know which one is which because of the client version event. Session `195a537d4452` says `SSH-2.0-OpenSSH_10.2p1 Debian-3` so that is the normal ssh client and session `877fcbbbc5fe` says `SSH-2.0-paramiko_4.0.0` so that is my script.
+
+Now the part that matters. The two `HASSH` values are different. The ssh client has `eeca2460550b9ded084ecf2f70a75356` and paramiko has `a2de0f306611e0957be704f5b0e35a82`. Same account and same machine and same command and the log still tells the two clients apart which I think is pretty cool. The `HASSH` is written at the connect before any login so paramiko has it even though its command blew up on my screen.
+
+For the record here are the other numbers. Session `195a537d4452` has `10 events` with the connect at `17:00:48` and one successful login at `17:00:55` and the `whoami` right after and it lasted `6431` milliseconds. Session `877fcbbbc5fe` has `8 events` with the connect at `17:01:53` and the successful login only about `0.05 seconds` later and the `whoami` after that and it lasted `344` milliseconds. Cowrie logged the `whoami` in both sessions even though the script never got an answer back. There are `no failed logins` and no `cowrie.session.file_download` event and no `cowrie.command.failed` event in both sessions. The long wait before the login in the first session was me typing the password inside ssh and in the second session I typed it before the script connected so that gap is about my typing and not about the client. The first session has two `cowrie.client.var` events and the second has none and I do not know what that means so I am only noting it. The close times in true UTC are calculated as `2026-10-31T12:00:55Z` and `2026-10-31T12:01:53Z` and they are not noted.
+
+On the `MITRE ATT&CK` side I leave the mapping empty on purpose because a client fingerprint is not a technique and I will not invent a number for it. It is about the tool the attacker connects with so the planned label is fingerprinting (`Label: SIMULATED.`)
