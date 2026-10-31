@@ -52,7 +52,11 @@ Command: `ssh <lab-account>@<vm-ip> -p 2222`
 
 I typed `uname -a` first to see the system and the fake machine answered with a Linux kernel line. Then I typed `cat /proc/cpuinfo` to get the details of the CPU and it printed `two processors`. Then I typed `whoami` and it told me the name of my lab account. Then I typed `free -m` to check the memory and then `ps aux` to see the running processes. At last I typed `ls` and nothing printed so I tried once again and nothing printed again and then I typed `exit` and got out. All these answers are made up by Cowrie so none of it shows the real VM.
 
-The time I noted before starting was `2026-10-30T23:13:44Z` in true UTC and the time I noted after it ended was `2026-10-30T23:17:11Z`. The Cowrie log window is
+The time I noted before starting was `2026-10-30T23:13:44Z` in true UTC and the time I noted after it ended was `2026-10-30T23:17:11Z`. The Cowrie log window is `2026-10-31T04:13:44 to 2026-10-31T04:17:11` with the same `5 hour shift` as before because of the timezone of my Debian VM. I did not note this window at the time so I calculated it from the true UTC time.
+
+Then I came to Cowrie and the session ID was `cc4e34486973`. It shows `8 commands` in this order: `uname -a`, `cat /proc/cpuinfo`, `whoami`, `free -m`, `ps aux`, `ls`, `ls` and `exit`. The session lasted about `2 minutes and 11 seconds`. The answers were fake so I only know what I typed and what Cowrie logged.
+
+Now if I try to map this to `MITRE ATT&CK` the number would be `T1082 (System Information Discovery)` for the commands that look at the system and `T1083 (File and Directory Discovery)` for the `ls` commands (`Label: SIMULATED.`)
 
 ---
 
