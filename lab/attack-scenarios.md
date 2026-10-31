@@ -175,3 +175,25 @@ This is the part that matters for this scenario. I calculated the gaps from the 
 At last I noted the time again and it was `2026-10-31T11:27:20Z` in true UTC. The Cowrie log window is `2026-10-31T16:23:45 to 2026-10-31T16:27:20`. The session closed at `16:27:19` and Cowrie says `192302` milliseconds so it lasted about `3 minutes and 12 seconds`.
 
 Now if I try to map this to `MITRE ATT&CK` the playbook has no ATT&CK number for this one so I am not inventing one. It is a behavior and not a technique. I call it a slow human session and the planned label is behavioral (`Label: SIMULATED.`)
+
+---
+
+---
+
+## Scenario 10: fast bot session
+
+This one is the opposite of scenario 9. A bot does not stop and think and it does not open a shell and type line by line so I wanted one session where the commands come in all at once and the log shows almost no time between them. I used the same three commands as in scenario 9 so I can compare the slow and the fast session directly. I checked first that Cowrie was running and that my attacker VM Kali had only the host-only address. Then I noted the start time and it was `2026-10-31T11:43:49Z` in true UTC. The Cowrie log time for the start is `2026-10-31T16:43:49` with the same `5 hour shift` as before because of the timezone of my Debian VM.
+
+This time I did not open a shell. I put the three commands inside the ssh line itself in quotes and I split them with semicolons. I still typed the password by hand like in every scenario. After that the commands ran by themselves and the connection closed and I did not type `exit`.
+
+Command: `ssh <lab-account>@<vm-ip> -p 2222 'whoami; pwd; ls'`
+
+On my Kali screen the fake shell printed the name of my lab account for `whoami` and the home folder of my lab account for `pwd` and nothing for `ls`. Then I noted the end time and it was `2026-10-31T11:44:34Z` in true UTC. The Cowrie log window is `2026-10-31T16:43:49 to 2026-10-31T16:44:34`.
+
+Then I switched to my Debian VM and counted the sessions after my start time and there was only `1` so no extra try this time and the session ID was `8eb88da2840c`. The whole session has `10 events`. It shows the connect at `16:44:11` and one successful login at `16:44:19` about `8 seconds` after the connect and `no failed logins`. Those `8 seconds` were me typing the password by hand so they are not bot speed. There is no `cowrie.session.file_download` event and no `cowrie.command.failed` event.
+
+This is the part that matters for this scenario. Cowrie logged only `1` command event and its text is `whoami; pwd; ls` so it did not log three separate commands like in scenario 9. I think this is because the ssh client sent the whole string in one piece but that is my guess and I did not check it. The command came about `0.23 seconds` after the login and the log closed about `0.01 seconds` after the command. The session closed at `16:44:19` and Cowrie says `8476` milliseconds so it lasted about `8.5 seconds`. Scenario 9 had the same three commands and it lasted `192302` milliseconds so this one is about `23 times` shorter.
+
+The close time in true UTC is calculated as `2026-10-31T11:44:19Z` and it is not noted. The end time I noted on Kali is about `15 seconds` after the session really closed. I can only say this session looks fast in the log. It does not prove that a real bot was behind it because I ran it myself and I typed the password by hand.
+
+Now if I try to map this to `MITRE ATT&CK` the playbook has no ATT&CK number for this one so I am not inventing one. It is a behavior and not a technique. I call it a fast bot session and the planned label is behavioral (`Label: SIMULATED.`)
