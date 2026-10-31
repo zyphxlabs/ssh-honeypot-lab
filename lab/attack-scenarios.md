@@ -174,9 +174,7 @@ This is the part that matters for this scenario. I calculated the gaps from the 
 
 At last I noted the time again and it was `2026-10-31T11:27:20Z` in true UTC. The Cowrie log window is `2026-10-31T16:23:45 to 2026-10-31T16:27:20`. The session closed at `16:27:19` and Cowrie says `192302` milliseconds so it lasted about `3 minutes and 12 seconds`.
 
-Now if I try to map this to `MITRE ATT&CK` the playbook has no ATT&CK number for this one so I am not inventing one. It is a behavior and not a technique. I call it a slow human session and the planned label is behavioral (`Label: SIMULATED.`)
-
----
+Now if I try to map this to `MITRE ATT&CK` there is nothing to map because a slow human session is not a technique and I did not want to force a number on it. It is about how a person types so the planned label is behavioral (`Label: SIMULATED.`)
 
 ---
 
