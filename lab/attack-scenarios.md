@@ -79,3 +79,25 @@ Then I came to Cowrie and found one session in that window and the session ID wa
 Now if I try to map this to `MITRE ATT&CK` the number would be `T1105 (Ingress Tool Transfer)`. It failed because of the Cowrie rule but it was an attempt (`Label: SIMULATED.`)
 
 ---
+
+## Scenario 6: SSH key persistence
+
+This was the next scenario and it is about adding an SSH key. I noted the start time first and it was `2026-10-31T10:17:21Z` in true UTC. Then I logged in by hand from my attacker VM Kali to my own honeypot with the lab account on port `2222` and I got in.
+
+Command: `ssh <lab-account>@<vm-ip> -p 2222`
+
+Then I typed `mkdir -p ~/.ssh`. The `-p` flag means no error if the folder already exists and it also makes the parent folder if it is missing. Because this is Cowrie I was not sure if the fake shell would really handle the parent folders and I did not check it. After that I typed an echo command that wrote a fake key line into `authorized_keys` and it was only a fake text and not a real key.
+
+Command: `mkdir -p ~/.ssh`
+
+Command: `echo "ssh-rsa FAKEKEY lab" >> ~/.ssh/authorized_keys`
+
+Then I switched to my Debian VM and checked if Cowrie really logged it and it did. I found one session in my window and the session ID was `fc0d9c9bb7e8`. It shows one successful login at `15:18:03` about `8 seconds` after the connect and `no failed logins`. It shows `2 commands` that I typed which are the `mkdir` at `15:18:28` and the `echo` at `15:18:49`.
+
+Then I saw one more thing and it shocked me a bit. Cowrie logged a `file_download` event even though I did not download anything. I only used `echo` and redirected it with `>>`. I read the full event and it says Cowrie saved what the redirect wrote and the destination file was `authorized_keys`. It has no URL because nothing came from the internet. I read the saved file and it had only my one fake key line. I did not compute the hash myself so I take it from Cowrie.
+
+At last I typed `exit` and noted the time again and it was `2026-10-31T10:20:41Z` in true UTC. The Cowrie log window is `2026-10-31T15:17:21 to 2026-10-31T15:20:41` with the same `5 hour shift` as before because of the timezone of my Debian VM. The session closed at `15:20:38` and Cowrie says `162498` milliseconds so it lasted about `2 minutes and 42 seconds`. I did not test if a key like this would really let someone in because the honeypot does not do that.
+
+Now if I try to map this to `MITRE ATT&CK` the number would be `T1098.004 (SSH Authorized Keys)` which is adding an SSH key so the attacker can get back in later without the password (`Label: SIMULATED.`)
+
+---
