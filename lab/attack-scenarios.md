@@ -101,3 +101,25 @@ At last I typed `exit` and noted the time again and it was `2026-10-31T10:20:41Z
 Now if I try to map this to `MITRE ATT&CK` the number would be `T1098.004 (SSH Authorized Keys)` which is adding an SSH key so the attacker can get back in later without the password (`Label: SIMULATED.`)
 
 ---
+
+## Scenario 7: cron persistence
+
+This was the next scenario and it is about adding a cron job so something would run again later. I noted the start time first and it was `2026-10-31T10:34:43Z` in true UTC. Then I logged back in by hand from my attacker VM Kali to my own honeypot with the lab account on port `2222` and I got in.
+
+Command: `ssh <lab-account>@<vm-ip> -p 2222`
+
+First I checked the existing cron jobs but none was created yet so nothing useful printed. Then I typed the command that creates a cron job with a fake path and it was only a fake one and not a real tool.
+
+Command: `crontab -l`
+
+Command: `echo "* * * * * /tmp/x" | crontab -`
+
+Then I switched to my Debian VM and checked if Cowrie really logged it and it did. I found one session in my window and the session ID was `d073975be95f`. It shows one successful login at `15:36:04` about `8 seconds` after the connect at `15:35:56` and `no failed logins`. It shows `3 commands` in this order: `crontab -l` at `15:36:24`, the `echo` line at `15:36:59` and `exit` at `15:38:21`. The whole session has `13 events`. There is no `cowrie.session.file_download` event and no `cowrie.command.failed` event.
+
+I do not know what the fake shell did with the cron line because Cowrie logged only what I typed so I cannot say a job was stored. I did not test if it would ever run because the honeypot does not do that.
+
+At last I typed `exit` and noted the time again and it was `2026-10-31T10:38:24Z` in true UTC. The Cowrie log window is `2026-10-31T15:34:43 to 2026-10-31T15:38:24` with the same `5 hour shift` as before because of the timezone of my Debian VM. The session closed at `15:38:21` and Cowrie says `145163` milliseconds so it lasted about `2 minutes and 25 seconds`.
+
+Now if I try to map this to `MITRE ATT&CK` the number would be `T1053.003 (Scheduled Task/Job: Cron)` which is adding a cron job so the attacker can get a job to run again later (`Label: SIMULATED.`)
+
+---
