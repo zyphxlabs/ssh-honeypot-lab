@@ -194,4 +194,4 @@ This is the part that matters for this scenario. Cowrie logged only `1` command 
 
 The close time in true UTC is calculated as `2026-10-31T11:44:19Z` and it is not noted. The end time I noted on Kali is about `15 seconds` after the session really closed. I can only say this session looks fast in the log. It does not prove that a real bot was behind it because I ran it myself and I typed the password by hand.
 
-Now if I try to map this to `MITRE ATT&CK` the playbook has no ATT&CK number for this one so I am not inventing one. It is a behavior and not a technique. I call it a fast bot session and the planned label is behavioral (`Label: SIMULATED.`)
+For the `MITRE ATT&CK` part I am not putting a number here either because I am not going to make one up for a fast bot session. What this scenario shows is speed and not what an attacker does so I only call it behavioral for now (`Label: SIMULATED.`)
