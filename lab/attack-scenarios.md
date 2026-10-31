@@ -1,7 +1,5 @@
 # Attack scenarios
 
-# Attack scenarios
-
 ## Scenario 1: connect-only scan
 
 This one happened right at the start of the lab while I was just testing the connection from my attacker VM Kali to my honeypot. I did not plan it as a scenario so I did not note the time or the command and I only found it later when I went looking in the `Cowrie log`. I think I used nc to just touch port 2222 and close it with no login and no typing but I do not remember the exact command so I am marking it as a guess.
@@ -27,5 +25,21 @@ The time I noted before starting hydra was `2026-10-30T21:51:37Z `as per UTC and
 After all this I came up with the results of a total of 161 sessions with `2080 failed attempts `and 0 successful logins. Hydra planned 2000 tries but Cowrie logged `2080` and I think hydra retried some of them but I have not proven it. If I do the calculation that was about `13 tries` per session on average and that was pretty fast so I was curious and shocked too because I saw this for the first time in my own logs. Because this scenario has many sessions I identify it by the time window and not by one session ID.
 
 Now if I try to map this to `MITRE ATT&CK` the number would be `T1110 (Brute Force)`The scenario where I used hydra to do the attempts(`Label: SIMULATED.`)
+
+---
+
+## Scenario 3: brute force that succeeds
+
+This time I logged in again using the normal ssh prompt from my attacker VM to my own honeypot on port `2222`. The account name was the allowed lab account. I entered the first `2` passwords wrong and at the `third` attempt I entered the right one and it worked so a successful brute force was logged in my Cowrie and I checked it. I typed the password by hand because I did not want the lab account and its password to go into `users.txt` and `pass.txt` for security reasons.
+
+Command: `ssh <lab-account>@<vm-ip> -p 2222`
+
+I think I made typing mistakes on my first try and that was the part that went wrong. I read the full event list of both sessions and the log shows that the first connection `927a2b4fbff1` had `3 failed logins` and then closed and the second connection `1f4f4ebf8204` had `1 failed login` and then closed and neither of them has a success. We are humans and make mistakes so that is normal. I did not remove them and they stay in the logs as proof. They are not part of this scenario.
+
+The time I noted before starting was `2026-10-30T22:36:45Z` in true UTC and I ended and checked it again and it was `2026-10-30T22:38:01Z`. The Cowrie log window is `2026-10-31T03:36:45 to 2026-10-31T03:38:01` with the same `5 hour shift` as before because of the timezone of my Debian VM.
+
+Then I came to Cowrie and checked my attempts with jq using a command and the session ID was `9ecf35dfcc82`. It shows `two failed logins` at `03:37:10` and `03:37:18` and then `one success` at `03:37:37` about `29 seconds` after the connect. After being sure it was logged and worked I just typed exit in my attacker VM and the session closed at `03:37:59` so it lasted about `51 seconds`. The major part that I think helped me was monitoring the log after my attempts to check if any of them worked or not and except the last one all failed.
+
+Now if I try to map this to `MITRE ATT&CK` the number would be `T1110 (Brute Force)` for the wrong passwords before the success and `T1078.003 (Valid Accounts: Local Accounts)` for the scenario where I used a valid account (`Label: SIMULATED.`)
 
 ---
