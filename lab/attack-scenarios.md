@@ -43,3 +43,15 @@ Then I came to Cowrie and checked my attempts with jq using a command and the se
 Now if I try to map this to `MITRE ATT&CK` the number would be `T1110 (Brute Force)` for the wrong passwords before the success and `T1078.003 (Valid Accounts: Local Accounts)` for the scenario where I used a valid account (`Label: SIMULATED.`)
 
 ---
+
+## Scenario 4: recon after login
+
+I came back to my attacker VM Kali and logged in again by hand to my own honeypot on port `2222` with the allowed lab account. This time I wanted to look around the system like an attacker does after getting in. The first try worked with `no failed logins` so this scenario starts at the login.
+
+Command: `ssh <lab-account>@<vm-ip> -p 2222`
+
+I typed `uname -a` first to see the system and the fake machine answered with a Linux kernel line. Then I typed `cat /proc/cpuinfo` to get the details of the CPU and it printed `two processors`. Then I typed `whoami` and it told me the name of my lab account. Then I typed `free -m` to check the memory and then `ps aux` to see the running processes. At last I typed `ls` and nothing printed so I tried once again and nothing printed again and then I typed `exit` and got out. All these answers are made up by Cowrie so none of it shows the real VM.
+
+The time I noted before starting was `2026-10-30T23:13:44Z` in true UTC and the time I noted after it ended was `2026-10-30T23:17:11Z`. The Cowrie log window is
+
+---
