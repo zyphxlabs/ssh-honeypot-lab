@@ -149,3 +149,29 @@ I did not type `exit` this time. I waited and the fake shell printed `timed out 
 Then I came to Cowrie and the session ID was `38b83be6391c`. It shows one successful login at `16:05:02` about `7 seconds` after the connect at `16:04:55` and `no failed logins`. It shows `2 commands` that I typed which are the `curl` at `16:05:09` and the `chmod` at `16:05:37`. The whole session has `12 events`. There is no `cowrie.session.file_download` event and no `cowrie.command.failed` event. The session closed at `16:08:36` in Cowrie log time and Cowrie says `221442` milliseconds so it lasted about `3 minutes and 41 seconds`. The close time in true UTC is calculated as `2026-10-31T11:08:36Z` and it is not noted.
 
 Now if I try to map this to `MITRE ATT&CK` the number would be `T1496 (Resource Hijacking)` for the miner name `xmrig` in my commands. No miner ran and nothing was downloaded so it is only the text of the commands (`Label: SIMULATED.`)
+
+---
+
+---
+
+## Scenario 9: slow human session
+
+This one is not about a technique. It is about how a person types. A bot fires its commands one after another and a person stops and thinks between them so I wanted one session where the pauses are big and easy to see in the log. I noted the start time first and it was `2026-10-31T11:23:45Z` in true UTC. The Cowrie log time for the start is `2026-10-31T16:23:45` with the same `5 hour shift` as before because of the timezone of my Debian VM. Then I logged in by hand from my attacker VM Kali to my own honeypot with the lab account on port `2222`.
+
+Command: `ssh <lab-account>@<vm-ip> -p 2222`
+
+I planned pauses of about `30 seconds` between my commands and I kept all of them well below the idle limit so the fake shell would not log me out by itself. I typed `whoami` and it printed the name of my lab account. Then I typed `pwd` and it printed the home folder of my lab account. Then I typed `ls` and nothing printed. At last I typed `exit` and got out.
+
+Command: `whoami`
+
+Command: `pwd`
+
+Command: `ls`
+
+Then I switched to my Debian VM and counted the sessions after my start time and there was only `1` so no extra try this time and the session ID was `62248f39d2c8`. It shows one successful login at `16:24:13` about `6 seconds` after the connect at `16:24:07` and `no failed logins`. It shows `3 commands` and an exit in this order: `whoami` at `16:25:03`, `pwd` at `16:25:33`, `ls` at `16:26:13` and `exit` at `16:27:19`. The whole session has `14 events`. There is no `cowrie.session.file_download` event and no `cowrie.command.failed` event.
+
+This is the part that matters for this scenario. I calculated the gaps from the timestamps. From the login to `whoami` it is about `49 seconds` and from `whoami` to `pwd` about `30 seconds` and from `pwd` to `ls` about `40 seconds` and from `ls` to `exit` about `66 seconds`. So some of my pauses were longer than the `30 seconds` I planned. A bot would not wait like this. I can only say the gaps are big. The log cannot prove that a real human was typing.
+
+At last I noted the time again and it was `2026-10-31T11:27:20Z` in true UTC. The Cowrie log window is `2026-10-31T16:23:45 to 2026-10-31T16:27:20`. The session closed at `16:27:19` and Cowrie says `192302` milliseconds so it lasted about `3 minutes and 12 seconds`.
+
+Now if I try to map this to `MITRE ATT&CK` the playbook has no ATT&CK number for this one so I am not inventing one. It is a behavior and not a technique. I call it a slow human session and the planned label is behavioral (`Label: SIMULATED.`)
