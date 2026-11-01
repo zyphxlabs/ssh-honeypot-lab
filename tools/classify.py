@@ -57,10 +57,16 @@ def get_label(row):
     # miner before download. the miner session has curl and xmrig together
     if "xmrig" in text:
         return "miner_download"
-    # wipe before download. the pkill sessions delete files and then download a script
-    if "rm -rf" in text and ("wget" in text or "curl" in text):
+    # where the last wget or curl is in the text. find gives the first place of a word and rfind the last place. -1 means it is not there
+    # a bare word like "wget;" is only a probe. a real download has a space after the word
+    last_download = text.rfind("wget ")
+    if text.rfind("curl ") > last_download:
+        last_download = text.rfind("curl ")
+    # wipe before download. a delete that comes before the last download
+    wipe_at = text.find("rm -rf")
+    if wipe_at != -1 and wipe_at < last_download:
         return "wipe_then_download"
-    if "wget" in text or "curl" in text:
+    if last_download != -1:
         return "download_and_run"
     if "authorized_keys" in text:
         return "ssh_key_persist"
