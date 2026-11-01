@@ -57,11 +57,14 @@ def get_label(row):
     # miner before download. the miner session has curl and xmrig together
     if "xmrig" in text:
         return "miner_download"
+    # wipe before download. the pkill sessions delete files and then download a script
+    if "rm -rf" in text and ("wget" in text or "curl" in text):
+        return "wipe_then_download"
     if "wget" in text or "curl" in text:
         return "download_and_run"
     if "authorized_keys" in text:
         return "ssh_key_persist"
-    if "crontab" in text:
+    if "crontab" in text.replace("crontab -l", ""):
         return "cron_persist"
 
     # one command with a ; inside is a one liner
