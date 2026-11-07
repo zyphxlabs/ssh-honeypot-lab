@@ -1,7 +1,7 @@
 title: Cron persistence with crontab - in session commands
 id: abdc0399-8a4c-43c7-a02c-ddeae6c249b3
 status: experimental
-description: Finds sessions where the commands field loads a new cron table with crontab -. This can mean someone adds a cron job to keep access. The input is one session row with a commands field. It is not a raw Cowrie log line. The rule only checks for the text crontab - and does not check what is loaded. I did not use a crontab -l filter. In my lab and synthetic sessions the attack itself starts with crontab -l, so that filter hid every match.
+description: Finds sessions where the commands field loads a new cron table with crontab - in the middle or at the end of the text. This can mean someone adds a cron job to keep access. The input is one session row with a commands field. It is not a raw Cowrie log line. The rule only checks for the text crontab - and does not check what is loaded. I did not use a crontab -l filter. In my lab and synthetic sessions the attack itself starts with crontab -l, so that filter hid every match.
 author: zyphex(Romail)
 date: 2026-11-07
 references:
@@ -13,11 +13,11 @@ logsource:
     product: cowrie
     service: session_csv
 detection:
-    selection:
-        commands|contains:
-            - 'crontab - '
-            - 'crontab -"'
-    condition: selection
+    selection_mid:
+        commands|contains: 'crontab - '
+    selection_end:
+        commands|endswith: 'crontab -'
+    condition: selection_mid or selection_end
 level: medium
 falsepositives:
     - An admin editing their own cron jobs like normal
