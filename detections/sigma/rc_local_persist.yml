@@ -1,0 +1,22 @@
+title: Startup script persistence with rc.local in session commands
+id: 3f4c0d3d-e4c1-4082-92a9-47d9d755f6b6
+status: experimental
+description: Finds sessions where the commands field has the text /etc/rc.local. This can mean someone adds a line to a boot script to keep access. The input is one session row with a commands field. It is not a raw Cowrie log line. The rule only checks that the text is there. It does not check if the command writes to the file. I found no match in the CyberLab Nov 1 public dataset and none in my simulated lab. So this rule is only tested on my synthetic data.
+author: zyphex(Romail)
+date: 2026-11-07
+references:
+    - https://attack.mitre.org/techniques/T1037/004/
+tags:
+    - attack.persistence
+    - attack.t1037.004
+logsource:
+    product: cowrie
+    service: session_csv
+detection:
+    selection:
+        commands|contains: '/etc/rc.local'
+    condition: selection
+level: medium
+falsepositives:
+    - An admin who edits or reads rc.local like normal
+    - The text /etc/rc.local inside some other command
