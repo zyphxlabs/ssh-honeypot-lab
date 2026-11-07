@@ -1,0 +1,22 @@
+title: SSH key persistence with authorized_keys in session commands
+id: de32fcc8-ca9c-4dee-8ed6-03ec80270cfc
+status: experimental
+description: Finds sessions where the commands field has the word authorized_keys. This can mean someone adds their own SSH key to keep access. The input is one session row with a commands field. It is not a raw Cowrie log line. The rule only checks that the word is there. It does not check what the command does.
+author: zyphex(Romail)
+date: 2026-11-07
+references:
+    - https://attack.mitre.org/techniques/T1098/004/
+tags:
+    - attack.persistence
+    - attack.t1098.004
+logsource:
+    product: cowrie
+    service: session_csv
+detection:
+    selection:
+        commands|contains: 'authorized_keys'
+    condition: selection
+level: medium
+falsepositives:
+    - An admin just editing the authorized_keys file like normal
+    - A person or a bot only checking if a key is already in authorized_keys
