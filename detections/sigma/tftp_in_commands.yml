@@ -1,0 +1,22 @@
+title: Tftp tool in session commands
+id: 5c3cf6d8-9cde-4864-a63a-b1a3208a8543
+status: experimental
+description: Finds sessions where the commands field has the word tftp. This can mean someone pulls a file with tftp. The input is one session row with a commands field. It is not a raw Cowrie log line. The word is a tool name and does not prove a download happened. In the CyberLab Nov 1 public dataset 39 of 41 matches also have /bin/busybox, so most of them look like one kind of probe. My classify.py does not count tftp. I found no match in my simulated lab and none in my synthetic data. So only the public dataset tests this rule.
+author: zyphex(Romail)
+date: 2026-11-07
+references:
+    - https://attack.mitre.org/techniques/T1105/
+tags:
+    - attack.command-and-control
+    - attack.t1105
+logsource:
+    product: cowrie
+    service: session_csv
+detection:
+    selection:
+        commands|contains: 'tftp'
+    condition: selection
+level: low
+falsepositives:
+    - An admin who uses tftp like normal
+    - The word tftp inside some other text

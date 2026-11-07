@@ -1,0 +1,22 @@
+title: Shell history switched off with HISTFILE in session commands
+id: f6c5a413-c045-464e-8f43-bf0ef7828ba4
+status: experimental
+description: Finds sessions where the commands field has the word HISTFILE. This can mean someone switches off shell history to hide what they do. The input is one session row with a commands field. It is not a raw Cowrie log line. The rule only checks that the word is there. It does not check if history is unset or sent to /dev/null. In the CyberLab Nov 1 public dataset I found 3 matches and 1 of them is also a match for my authorized_keys rule. I found no match in my simulated lab and none in my synthetic data. So only the public dataset tests this rule, and with 3 sessions it is a very small test.
+author: zyphex(Romail)
+date: 2026-11-07
+references:
+    - https://attack.mitre.org/techniques/T1562/003/
+tags:
+    - attack.defense-evasion
+    - attack.t1562.003
+logsource:
+    product: cowrie
+    service: session_csv
+detection:
+    selection:
+        commands|contains: 'HISTFILE'
+    condition: selection
+level: medium
+falsepositives:
+    - An admin who sets HISTFILE for a normal reason
+    - The word HISTFILE inside some other text
