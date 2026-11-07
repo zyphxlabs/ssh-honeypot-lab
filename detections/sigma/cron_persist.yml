@@ -20,5 +20,5 @@ detection:
     condition: selection_mid or selection_end
 level: medium
 falsepositives:
-    - An admin editing their own cron jobs like normal
+    - An admin who loads a cron file with crontab - on purpose
     - The word crontab inside some other command or file name
