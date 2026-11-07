@@ -21,4 +21,3 @@ detection:
 level: medium
 falsepositives:
     - An admin who loads a cron file with crontab - on purpose
-    - The word crontab inside some other command or file name
