@@ -1,0 +1,22 @@
+title: Miner tool name xmrig in session commands
+id: e2569759-b0d9-481e-806b-5a8417aa2efa
+status: experimental
+description: Finds sessions where the commands field has the word xmrig. This can mean someone tries to run a coin miner. The input is one session row with a commands field. It is not a raw Cowrie log line. The word is a tool name and does not prove that mining happened. I found no match in the CyberLab Nov 1 public dataset, so this rule is only tested on my simulated lab and my synthetic data.
+author: zyphex(Romail)
+date: 2026-11-07
+references:
+    - https://attack.mitre.org/techniques/T1496/
+tags:
+    - attack.impact
+    - attack.t1496
+logsource:
+    product: cowrie
+    service: session_csv
+detection:
+    selection:
+        commands|contains: 'xmrig'
+    condition: selection
+level: medium
+falsepositives:
+    - An admin or a researcher who runs xmrig on purpose
+    - The word xmrig inside a file name or a text only
