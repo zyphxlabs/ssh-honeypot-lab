@@ -130,3 +130,55 @@ I was cleaning my test logs so I typed `rm` with the path to `cowrie.json*`, the
 ### Lesson
 
 `&&` needs a command on both sides and a file name alone is not a command and because `*` can match more files than I expect I check a wildcard command before I press Enter.
+
+---
+
+## Failure 4: my first search found 6 download sessions and there were 50
+
+### What I ran
+
+I wanted to list the download servers in the CyberLab Nov 1 data. I ran `grep -c http` on `cyber_nov01_sessions.csv` and it said 6. Then I ran `grep -cE 'wget|curl|tftp'` on the same file and it said 50.
+
+### Error
+
+No error message. The two numbers did not match and that was the problem.
+
+### Why it failed
+
+Searching for `http` only finds downloads that have a full web address. About 40 of the 50 sessions had a bare `wget;` with no host after it. They looked like a bot checking if the tool exists. Some real downloads also had no `http`, like `wget -q 54.37.70.249/rp`. A bare IP has no `http://` in front of it. My first version of `extract_downloads.py` missed that host too.
+
+### Fix
+
+I added a second check for `wget` with a word that starts with a digit and has a slash in it. After that the host `54.37.70.249` showed up with a count of 10. The number matches the 5 `.satan` and 5 `rp` commands I saw before.
+
+### Lesson
+
+One search is not a proof. I count the same thing in two different ways and I trust the number only when both agree. The counts are commands and not attacks.
+
+---
+
+## Finding 1: I cannot look up the CyberLab IPs
+
+### What I ran
+
+I planned to enrich the IPs with reputation services. First I looked at the data with `head -5 data/cyber_nov01_sessions_ips.csv`.
+
+### What I saw
+
+The `src_ip` column does not hold IPs. Each value is a 64 character code. One code had 1610 sessions and another had 569.
+
+### Why it matters
+
+The data owners hid the real IPs. No reputation service knows these codes. My own lab IPs are private addresses so a lookup on them means nothing either. IP reputation does not work on any of my data.
+
+### What I did instead
+
+I wrote `extract_downloads.py`. It reads the commands and pulls out the host of every download. It tags each host as public, private or domain with the `ipaddress` module. The hosts are real because only the attacker IP was hidden. It writes them to a csv. It needs no internet and no account and it never opens an address.
+
+### Result
+
+In the Nov 1 data 50 sessions use `wget`, `curl` or `tftp`. The tool found 5 hosts. 4 are public IPs and 1 is a domain. This is a tiny sample out of about 59000 sessions so it only shows that the method works. The csv also drops the port of `103.219.112.66:8000`. That is a small loss.
+
+### Lesson
+
+I check what my data really holds before I plan around it. The data was pseudonymized and my first plan did not fit it. Data origin: PUBLIC DATASET, CyberLab Nov 1 2019.
