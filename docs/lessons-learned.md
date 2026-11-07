@@ -182,3 +182,29 @@ In the Nov 1 data 50 sessions use `wget`, `curl` or `tftp`. The tool found 5 hos
 ### Lesson
 
 I check what my data really holds before I plan around it. The data was pseudonymized and my first plan did not fit it. Data origin: PUBLIC DATASET, CyberLab Nov 1 2019.
+
+## Failure 5: my first cron rule matched nothing
+
+### What I built
+
+A Sigma rule for cron persistence. It looked for `crontab` in the commands but skipped any session with `crontab -l`.
+
+### What I expected
+
+On the Nov 1 data `crontab` shows up on 1091 lines. After the filter only 1 was left. I thought the filter removed a listing habit and kept the real attacks.
+
+### What I saw
+
+The rule matched 0 sessions in my lab data and 0 in my synthetic data. I had already committed it before I tested it.
+
+### Why it happened
+
+The attacks in my lab and synthetic sessions start with `crontab -l`, then add the job with `crontab -`. My filter dropped every one of them.
+
+### How I fixed it
+
+I removed the `crontab -l` filter. The rule now looks for the text `crontab -` in the middle or at the end of the commands.
+
+### Lesson
+
+I test a rule on data where I know the answer before I commit it. A rule that matches 0 is not safe. It can mean the rule is broken.
