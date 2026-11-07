@@ -15,6 +15,7 @@ data_files = [
     ("nov1 PUBLIC", "data/cyber_nov01_sessions.csv"),
     ("lab SIMULATED", "data/lab_sessions.csv"),
     ("synth SYNTHETIC", "data/synth_sessions.csv"),
+    ("benign SYNTHETIC", "data/benign_sessions.csv"),
 ]
 
 # ---------- step 2: read one rule file ----------
