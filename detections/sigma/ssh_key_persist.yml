@@ -18,5 +18,5 @@ detection:
     condition: selection
 level: medium
 falsepositives:
-    - An admin just editing the authorized_keys file like normal
+    - An admin just editing the authorized_keys file
     - A person or a bot only checking if a key is already in authorized_keys
