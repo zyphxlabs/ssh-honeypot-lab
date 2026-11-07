@@ -208,3 +208,53 @@ I removed the `crontab -l` filter. The rule now looks for the text `crontab -` i
 ### Lesson
 
 I test a rule on data where I know the answer before I commit it. A rule that matches 0 is not safe. It can mean the rule is broken.
+
+## Failure 6: my grep count was wrong
+
+### What I did
+
+I tested my cron rule with grep on the sessions CSV. On the synthetic data grep found 0 matches for a command that ends with `crontab -`.
+
+### What I saw
+
+My checker found 12 matches on the same synthetic data.
+
+### Why it happened
+
+In the CSV the commands column ends with a closing quote. Grep counted that quote as part of the command. My checker reads the file with the csv module and sees the text without the quote. So grep looked for something that was not there.
+
+### Lesson
+
+A grep count on a CSV file can be wrong when a field ends with a quote. I check a count with the tool that reads the data the right way. Only the checker showed me the truth.
+
+## Finding 2: my ATT&CK IDs were out of date
+
+### What I did
+
+I wrote the technique IDs and tactics for my first rules from memory.
+
+### What I found
+
+I checked them on the web. 3 of my 7 IDs or tactics were out of date. T1496 now has sub-techniques, so I use T1496.001. ATT&CK v19 split Defense Evasion into Stealth and Defense Impairment, so T1070.004 moved to Stealth. T1562.003 was revoked and replaced by T1690. I fixed rules 3, 6 and 8.
+
+### Not checked yet
+
+One source says ATT&CK v20 came out in October 2026. I did not check if it changed any of my IDs. I also did not verify the Sigma tag spellings for the two new tactics.
+
+### Lesson
+
+I do not trust an ID from memory. I check it on the official site before it goes into a rule.
+
+## Finding 3: 172 out of 172 does not cover everything
+
+### What I found
+
+My lab has 182 sessions. My truth file has 172. 10 lab sessions are not in it.
+
+### What it means
+
+The 172 out of 172 result covers only the sessions in my truth file. It says nothing about the other 10. I do not know why they are missing from the file.
+
+### Lesson
+
+When I report an accuracy number I also say how many sessions it covers and how many it leaves out.
