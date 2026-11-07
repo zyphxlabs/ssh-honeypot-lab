@@ -55,3 +55,34 @@ f.close()
 print("--- hosts ---")
 for host in hosts:
     print(host, hosts[host])
+
+    
+# ---------- part 3: tag every host as private, public or domain and save it ----------
+
+# ipaddress is a python tool that knows what an ip is
+import ipaddress
+
+# the output file gets its name from the input file
+path_out = path.replace("_sessions.csv", "_downloads.csv")
+out = open(path_out, "w", encoding="utf-8")
+out.write("host,type,count\n")
+
+print("--- host types ---")
+for host in hosts:
+    # some hosts have a port like :8000. i cut the port off first
+    name = host.split(":")[0]
+    # if the name is not an ip, python gives an error. then it is a domain
+    try:
+        ip = ipaddress.ip_address(name)
+        if ip.is_private:
+            kind = "private"
+        else:
+            kind = "public"
+    except ValueError:
+        kind = "domain"
+    print(name, kind)
+    # one line in the file: host, type, how many commands used it
+    out.write(name + "," + kind + "," + str(hosts[host]) + "\n")
+
+out.close()
+print("wrote", path_out)
