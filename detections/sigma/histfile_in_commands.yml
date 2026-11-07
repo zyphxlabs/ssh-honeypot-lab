@@ -5,10 +5,10 @@ description: Finds sessions where the commands field has the word HISTFILE. This
 author: zyphex(Romail)
 date: 2026-11-07
 references:
-    - https://attack.mitre.org/techniques/T1562/003/
+    - https://attack.mitre.org/techniques/T1690/
 tags:
-    - attack.defense-evasion
-    - attack.t1562.003
+    - attack.defense-impairment
+    - attack.t1690
 logsource:
     product: cowrie
     service: session_csv

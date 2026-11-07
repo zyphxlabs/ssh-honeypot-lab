@@ -5,10 +5,10 @@ description: Finds sessions where the commands field has the word xmrig. This ca
 author: zyphex(Romail)
 date: 2026-11-07
 references:
-    - https://attack.mitre.org/techniques/T1496/
+    - https://attack.mitre.org/techniques/T1496/001/
 tags:
     - attack.impact
-    - attack.t1496
+    - attack.t1496.001
 logsource:
     product: cowrie
     service: session_csv

@@ -8,7 +8,7 @@ references:
     - https://attack.mitre.org/techniques/T1070/004/
     - https://attack.mitre.org/techniques/T1105/
 tags:
-    - attack.defense-evasion
+    - attack.stealth
     - attack.t1070.004
     - attack.command-and-control
     - attack.t1105
