@@ -20,5 +20,5 @@ detection:
     condition: selection
 level: medium
 falsepositives:
-    - An admin who downloads a file with wget or curl like normal
+    - An admin who downloads a file with wget or curl
     - The words wget or curl inside some other text with a space after them

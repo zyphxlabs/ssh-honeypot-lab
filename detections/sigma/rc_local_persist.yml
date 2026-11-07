@@ -18,5 +18,5 @@ detection:
     condition: selection
 level: medium
 falsepositives:
-    - An admin who edits or reads rc.local like normal
+    - An admin who edits or reads rc.local
     - The text /etc/rc.local inside some other command

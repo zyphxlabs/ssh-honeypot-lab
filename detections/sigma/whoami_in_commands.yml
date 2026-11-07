@@ -18,5 +18,5 @@ detection:
     condition: selection
 level: low
 falsepositives:
-    - An admin who checks the user like normal
+    - An admin who checks the user
     - The word whoami inside some other command or text

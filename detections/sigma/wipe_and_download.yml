@@ -25,4 +25,4 @@ detection:
     condition: selection_wipe and selection_download
 level: medium
 falsepositives:
-    - An admin who cleans a folder and then downloads a file like normal
+    - An admin who cleans a folder and then downloads a file

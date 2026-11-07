@@ -18,5 +18,5 @@ detection:
     condition: selection
 level: low
 falsepositives:
-    - An admin who uses tftp like normal
+    - An admin who uses tftp
     - The word tftp inside some other text
