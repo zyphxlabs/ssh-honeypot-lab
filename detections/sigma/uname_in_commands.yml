@@ -1,0 +1,22 @@
+title: System info command uname -a in session commands
+id: bab255a3-3d7f-41d0-a800-f81992c94e2c
+status: experimental
+description: Finds sessions where the commands field has uname -a. This can mean someone checks what system they are on before the next step. The input is one session row with a commands field. It is not a raw Cowrie log line. The rule only checks that the text is there. It is also a normal admin command, so the level is low. In the CyberLab Nov 1 public dataset I found 1094 matches and I did not read them. My simulated lab has 2 matches and my synthetic data has 19.
+author: zyphex(Romail)
+date: 2026-11-07
+references:
+    - https://attack.mitre.org/techniques/T1082/
+tags:
+    - attack.discovery
+    - attack.t1082
+logsource:
+    product: cowrie
+    service: session_csv
+detection:
+    selection:
+        commands|contains: 'uname -a'
+    condition: selection
+level: low
+falsepositives:
+    - An admin who checks the system like normal
+    - The text uname -a inside some other command

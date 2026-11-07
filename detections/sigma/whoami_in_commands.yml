@@ -1,0 +1,22 @@
+title: User check command whoami in session commands
+id: 7bc2261e-e4b1-4b32-bb62-32b1a1008d72
+status: experimental
+description: Finds sessions where the commands field has whoami. This can mean someone checks which user they are before the next step. The input is one session row with a commands field. It is not a raw Cowrie log line. The rule only checks that the word is there. It is also a normal admin command, so the level is low. In the CyberLab Nov 1 public dataset I found 5 matches and I did not read them. My simulated lab has 6 matches and my synthetic data has 57.
+author: zyphex(Romail)
+date: 2026-11-07
+references:
+    - https://attack.mitre.org/techniques/T1033/
+tags:
+    - attack.discovery
+    - attack.t1033
+logsource:
+    product: cowrie
+    service: session_csv
+detection:
+    selection:
+        commands|contains: 'whoami'
+    condition: selection
+level: low
+falsepositives:
+    - An admin who checks the user like normal
+    - The word whoami inside some other command or text
