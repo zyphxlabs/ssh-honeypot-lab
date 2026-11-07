@@ -1,0 +1,29 @@
+title: Delete with rm -rf and download tool in the same session
+id: 43768d92-5309-4d67-9c9c-dfda67b5a2c2
+status: experimental
+description: Finds sessions where the commands field has rm -rf and also wget or curl with a space after the word. This can mean someone clears old files and then pulls a new one. The input is one session row with a commands field. It is not a raw Cowrie log line. The rule does not check the order. My classify.py only labels a session wipe_then_download when the delete comes before the last download. So this rule is weaker than my code. It also matches everything the download rule matches in these sessions. rm -rf alone is not enough. In the CyberLab Nov 1 public dataset most sessions with rm -rf have no download. I found no match in my simulated lab and none in my synthetic data. So only the public dataset tests this rule.
+author: zyphex(Romail)
+date: 2026-11-07
+references:
+    - https://attack.mitre.org/techniques/T1070/004/
+    - https://attack.mitre.org/techniques/T1105/
+tags:
+    - attack.defense-evasion
+    - attack.t1070.004
+    - attack.command-and-control
+    - attack.t1105
+logsource:
+    product: cowrie
+    service: session_csv
+detection:
+    selection_wipe:
+        commands|contains: 'rm -rf'
+    selection_download:
+        commands|contains:
+            - 'wget '
+            - 'curl '
+    condition: selection_wipe and selection_download
+level: medium
+falsepositives:
+    - An admin who cleans a folder and then downloads a file like normal
+    - A bot that deletes and downloads in the wrong order, because the rule does not check the order

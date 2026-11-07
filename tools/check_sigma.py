@@ -1,6 +1,6 @@
 # check_sigma.py - runs my small sigma rules on my session csv files
 # it only knows my own rule shape: contains and endswith on the commands field
-# the condition can be one block or blocks joined with or. nothing else
+# the condition can be one block, blocks joined with or, or blocks joined with and
 # usage: python tools/check_sigma.py
 
 import os
@@ -19,8 +19,8 @@ data_files = [
 
 # ---------- step 2: read one rule file ----------
 
-# gives back the title, the condition and two lists of words
-# one list for contains and one list for endswith
+# gives back the title, the condition and the blocks
+# a block has a name and two lists of words. one for contains and one for endswith
 def read_rule(path):
     f = open(path, "r", encoding="utf-8")
     lines = f.read().split("\n")
@@ -28,8 +28,8 @@ def read_rule(path):
 
     title = ""
     condition = ""
-    contains_words = []
-    endswith_words = []
+    blocks = {}
+    current = ""
 
     i = 0
     while i < len(lines):
@@ -40,6 +40,11 @@ def read_rule(path):
 
         if line.startswith("condition:"):
             condition = line[10:].strip()
+
+        # a new block starts with a name like selection or selection_end
+        if (line.startswith("selection") or line.startswith("filter")) and line.endswith(":"):
+            current = line[:-1]
+            blocks[current] = {"contains": [], "endswith": []}
 
         # check both kinds of match line
         for mod in ["contains", "endswith"]:
@@ -58,31 +63,56 @@ def read_rule(path):
                         found.append(item[1:-1])
                         i = i + 1
                     i = i - 1
-                if mod == "contains":
-                    contains_words = contains_words + found
-                else:
-                    endswith_words = endswith_words + found
+                blocks[current][mod] = blocks[current][mod] + found
         i = i + 1
 
-    return title, condition, contains_words, endswith_words
+    return title, condition, blocks
 
 # ---------- step 3: count matches ----------
 
-# counts the sessions where any contains word is inside the text
-# or the text ends with any endswith word
-def count_matches(csv_path, contains_words, endswith_words):
+# my checker can run one block, blocks joined with or, or blocks joined with and
+# it can not run not, and it can not mix and with or
+def can_run(condition):
+    words = condition.split(" ")
+    if "not" in words:
+        return False
+    if "and" in words and "or" in words:
+        return False
+    return True
+
+# true if one block fits the text
+def block_hit(text, block):
+    for w in block["contains"]:
+        if w in text:
+            return True
+    for w in block["endswith"]:
+        if text.endswith(w):
+            return True
+    return False
+
+# true if the whole condition fits the text
+def rule_hit(text, blocks, condition):
+    words = condition.split(" ")
+    results = []
+    for w in words:
+        if w != "or" and w != "and":
+            results.append(block_hit(text, blocks[w]))
+    if "and" in words:
+        for r in results:
+            if not r:
+                return False
+        return True
+    for r in results:
+        if r:
+            return True
+    return False
+
+# counts the sessions where the rule fits the commands
+def count_matches(csv_path, blocks, condition):
     f = open(csv_path, "r", encoding="utf-8", newline="")
     count = 0
     for row in csv.DictReader(f):
-        text = row["commands"]
-        hit = False
-        for w in contains_words:
-            if w in text:
-                hit = True
-        for w in endswith_words:
-            if text.endswith(w):
-                hit = True
-        if hit:
+        if rule_hit(row["commands"], blocks, condition):
             count = count + 1
     f.close()
     return count
@@ -93,17 +123,16 @@ for name in sorted(os.listdir(rule_folder)):
     if not name.endswith(".yml"):
         continue
 
-    title, condition, contains_words, endswith_words = read_rule(rule_folder + "/" + name)
+    title, condition, blocks = read_rule(rule_folder + "/" + name)
     print(name)
 
-    # my checker can only do a single block or blocks joined with or
-    if " and " in condition or "not" in condition:
+    if not can_run(condition):
         print("  skipped. condition is", condition)
         continue
 
-    print("  contains:", contains_words, " endswith:", endswith_words)
+    print("  condition:", condition)
     for label, csv_path in data_files:
-        print("  ", label, count_matches(csv_path, contains_words, endswith_words))
+        print("  ", label, count_matches(csv_path, blocks, condition))
 
 # ---------- step 5: compare the matches with my truth labels ----------
 
@@ -117,19 +146,11 @@ def read_truth(path):
     return truth
 
 # gives back how many matched sessions have each label
-def label_counts(csv_path, truth, contains_words, endswith_words):
+def label_counts(csv_path, truth, blocks, condition):
     counts = {}
     f = open(csv_path, "r", encoding="utf-8", newline="")
     for row in csv.DictReader(f):
-        text = row["commands"]
-        hit = False
-        for w in contains_words:
-            if w in text:
-                hit = True
-        for w in endswith_words:
-            if text.endswith(w):
-                hit = True
-        if hit:
+        if rule_hit(row["commands"], blocks, condition):
             label = "not_in_truth"
             if row["session"] in truth:
                 label = truth[row["session"]]
@@ -150,10 +171,10 @@ print("---------- labels of the matched sessions ----------")
 for name in sorted(os.listdir(rule_folder)):
     if not name.endswith(".yml"):
         continue
-    title, condition, contains_words, endswith_words = read_rule(rule_folder + "/" + name)
-    if " and " in condition or "not" in condition:
+    title, condition, blocks = read_rule(rule_folder + "/" + name)
+    if not can_run(condition):
         continue
     print(name)
     for label, csv_path, truth_path in truth_files:
         truth = read_truth(truth_path)
-        print("  ", label, label_counts(csv_path, truth, contains_words, endswith_words))
+        print("  ", label, label_counts(csv_path, truth, blocks, condition))
