@@ -1,0 +1,24 @@
+title: Download tool wget or curl in session commands
+id: eb6afd94-a385-4342-9e83-82a14fca458b
+status: experimental
+description: Finds sessions where the commands field has wget or curl with a space after the word. This can mean someone pulls a file onto the machine. The input is one session row with a commands field. It is not a raw Cowrie log line. The space is on purpose. A bare wget with no space is only a probe and does not match. The rule does not check what is downloaded or what runs after it. It also matches my miner sessions that use wget or curl, so it overlaps with the xmrig rule. I did not count tftp downloads.
+author: zyphex(Romail)
+date: 2026-11-07
+references:
+    - https://attack.mitre.org/techniques/T1105/
+tags:
+    - attack.command-and-control
+    - attack.t1105
+logsource:
+    product: cowrie
+    service: session_csv
+detection:
+    selection:
+        commands|contains:
+            - 'wget '
+            - 'curl '
+    condition: selection
+level: medium
+falsepositives:
+    - An admin who downloads a file with wget or curl like normal
+    - The words wget or curl inside some other text with a space after them
