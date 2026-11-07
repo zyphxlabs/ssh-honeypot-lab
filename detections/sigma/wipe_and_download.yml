@@ -26,4 +26,3 @@ detection:
 level: medium
 falsepositives:
     - An admin who cleans a folder and then downloads a file like normal
-    - A bot that deletes and downloads in the wrong order, because the rule does not check the order
