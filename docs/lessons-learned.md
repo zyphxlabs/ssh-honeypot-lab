@@ -258,3 +258,7 @@ The 172 out of 172 result covers only the sessions in my truth file. It says not
 ### Lesson
 
 When I report an accuracy number I also say how many sessions it covers and how many it leaves out.
+
+### Update
+
+I added the 10 missing sessions to my truth file. Now it has all 182 lab sessions. I labelled them from the session counts and the commands, not from my Phase 4 notes. The classifier matches 182 of 182. Only the first 172 come from my scenario notes. For the other 10 a match was almost certain, so they prove little. I tuned my rules after I saw the data, so this result is not independent.
