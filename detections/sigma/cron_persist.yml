@@ -1,0 +1,24 @@
+title: Cron persistence with crontab in session commands
+id: abdc0399-8a4c-43c7-a02c-ddeae6c249b3
+status: experimental
+description: Finds sessions where the commands field has the word crontab but not crontab -l. This can mean someone adds a cron job to keep access. The input is one session row with a commands field. It is not a raw Cowrie log line. The filter drops the whole session if it has crontab -l anywhere. So a session that lists and also edits cron jobs is missed. My classify.py only removes the -l part, so it is stronger than this rule.
+author: zyphex(Romail)
+date: 2026-11-07
+references:
+    - https://attack.mitre.org/techniques/T1053/003/
+tags:
+    - attack.persistence
+    - attack.t1053.003
+logsource:
+    product: cowrie
+    service: session_csv
+detection:
+    selection:
+        commands|contains: 'crontab'
+    filter:
+        commands|contains: 'crontab -l'
+    condition: selection and not filter
+level: medium
+falsepositives:
+    - An admin editing their own cron jobs like normal
+    - The word crontab inside some other command or file name
