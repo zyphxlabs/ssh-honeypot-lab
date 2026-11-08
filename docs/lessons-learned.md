@@ -83,7 +83,6 @@ I restored the backup with `cp` and ran `cowrie start` again. It worked. `grep -
 
 ---
 
----
 
 ## Incident 1: I typed my real password at the Cowrie prompt
 
@@ -105,9 +104,7 @@ Cowrie logs every password it sees. I never write my password or a hint of it in
 
 ---
 
----
 
----
 
 ## Incident 2: `rm` with `&&` and a missing command
 
