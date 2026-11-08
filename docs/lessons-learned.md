@@ -266,3 +266,17 @@ When I report an accuracy number I also say how many sessions it covers and how 
 ### Update
 
 I added the 10 missing sessions to my truth file. Now it has all 182 lab sessions. I labelled them from the session counts and the commands, not from my Phase 4 notes. The classifier matches 182 of 182. Only the first 172 come from my scenario notes. For the other 10 a match was almost certain, so they prove little. I tuned my rules after I saw the data, so this result is not independent.
+
+## Finding 4: my session count gap was line breaks
+
+### What I saw
+
+The Nov 1 sessions file has 58962 lines. Without the header that is 58961. My sessionizer counted 58959 sessions. The gap was 2.
+
+### What I found
+
+I counted with the csv module. Both the sessions file and the labels file have 58959 rows and 58959 unique session IDs. One session has 2 line breaks inside its commands field. Those 2 breaks are the 2 extra lines.
+
+### Lesson
+
+`wc -l` counts lines, not rows. A field with a line break makes the line count too high. I count rows with the csv module. 58959 is the right number of sessions for Nov 1.
