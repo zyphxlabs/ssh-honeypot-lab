@@ -22,7 +22,7 @@ So this is the CyberLab honeynet dataset and it holds everything that a Cowrie h
 
 ## What I downloaded
 
-I did not want 10 GB so I started with the smallest day `cyberlab_2019-05-13.json.gz` just to look at the format. That one day had 8860 connect events. After I saw it was fine I downloaded 1 to 7 November 2019 which is about 205 MB. I picked those days on purpose because before 8 November 2019 the honeypot ran as default low-interaction Cowrie 1.6.0 which is the same kind as my lab. After that date they put real Linux instances behind it so the traffic is not comparable. I also checked the md5 code of all 8 files against the Zenodo page and every single one matched.
+I did not want 10 GB so I started with the smallest day `cyberlab_2019-05-13.json.gz` just to look at the format. That one day had 8860 connect events. After I saw it was fine I downloaded 1 to 7 November 2019 which is about 205 MB. I picked those days on purpose because before 8 November 2019 the honeypot ran as default Cowrie 1.6.0 in the mode the dataset page calls low-interaction, the same Cowrie software as my lab. After that date they put real Linux instances behind it so the traffic is not comparable. I also checked the md5 code of all 8 files against the Zenodo page and every single one matched.
 
 ## What is inside
 
