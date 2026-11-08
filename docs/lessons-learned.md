@@ -245,6 +245,10 @@ One source says ATT&CK v20 came out in October 2026. I did not check if it chang
 
 I do not trust an ID from memory. I check it on the official site before it goes into a rule.
 
+### Update
+
+ATT&CK v20 came out on 13 October 2026. I confirmed the date on the MITRE updates page. I read news summaries of the changes and none of my technique IDs was in them. I did not open the official changelog, so I can say I found no change, not that there is none.
+
 ## Finding 3: 172 out of 172 does not cover everything
 
 ### What I found
